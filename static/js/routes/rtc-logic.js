@@ -195,7 +195,7 @@ export default class RTCConn {
     this._dc.onmessage = this._dcOnMessage;
     this._messageHooks["file-chunk"] = data => {
       this._fileMeta = data;
-      console.log("ready for next chunk")
+      console.log("ready for next chunk");
       this._sendJSON({ type: "chunk-ready", data });
     };
     this._messageHooks["complete"] = Merger.complete.bind(Merger);
@@ -231,6 +231,7 @@ export default class RTCConn {
       const { detail: message } = await nextEvent(window, "chunk-ready");
       if (message.id === data.id) {
         this._sendRaw(buf);
+        await nextEvent(window, "chunk-ready");
         sentAmount += buf.byteLength;
         this.__reportProgress(true, sentAmount, data.size);
         if (i === ln - 1) {
@@ -267,11 +268,12 @@ export default class RTCConn {
         }
       }
     } else {
-      return Merger.merge(
+      Merger.merge(
         { file: $data, data: this._fileMeta },
         e => this.__reportProgress(false, e, this._fileMeta.size),
         showDownloadDialog.bind(this)
       );
+      return this._sendJSON({ type: "chunk-ready", data });
     }
     return;
   }
