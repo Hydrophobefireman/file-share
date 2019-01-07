@@ -223,24 +223,27 @@ export default class RTCConn {
       return document.body.appendChild(el);
     };
   }
-  _sendPartialFile({ bufferChunk, data }) {
+  async _sendPartialFile({ bufferChunk, data }) {
     const ln = bufferChunk.length;
     let sentAmount = 0;
-    bufferChunk.forEach(async (buf, i) => {
+    for (let i = 0; i < bufferChunk.length; i++) {
+      const buf = bufferChunk[i];
       this._sendJSON({ type: "file-chunk", data });
       const { detail: message } = await nextEvent(window, "chunk-ready");
       if (message.id === data.id) {
         this._sendRaw(buf);
-        await nextEvent(window, "chunk-ready");
-        sentAmount += buf.byteLength;
-        this.__reportProgress(true, sentAmount, data.size);
-        if (i === ln - 1) {
-          const el = document.querySelector("file-progress");
-          el ? (el.onclick = () => el.remove()) : void 0;
-          return this._sendJSON({ type: "complete" });
-        }
+        await nextEvent(window, "chunk-ready").then(() => {
+          sentAmount += buf.byteLength;
+          this.__reportProgress(true, sentAmount, data.size);
+          if (i === ln - 1) {
+            const el = document.querySelector("file-progress");
+            el ? (el.onclick = () => el.remove()) : void 0;
+            return this._sendJSON({ type: "complete" });
+          }
+          return 1;
+        });
       }
-    });
+    }
   }
   async _ChunkAndSendEachFile({ files }) {
     for (const file of files) {
