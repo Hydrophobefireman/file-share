@@ -230,5 +230,13 @@ async def handle500(error):
     )
 
 
+@app.before_serving
+def open_to_nginx():
+    try:
+        open("/tmp/app-initialized", "w").close()
+    except:
+        pass
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", use_reloader=True)
