@@ -3,7 +3,7 @@ import MatSpinner from "./custom-elements/matspinner.js";
 export const ProdMode = () => location.hostname !== "localhost";
 export const _URLHOST = window.location.host.includes("localhost")
   ? "localhost:5000"
-  : "file-share.herokuapp.com";
+  : "file-share-rtc.herokuapp.com";
 export function nextEvent(target, name) {
   return new Promise(resolve => {
     target.addEventListener(name, resolve, { once: true });
