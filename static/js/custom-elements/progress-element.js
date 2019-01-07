@@ -10,8 +10,9 @@ class ProgressElement extends HTMLElement {
     const per = ((this._done / this._total) * 100).toFixed(2);
     const perc = `${Math.min(per, 100)}%`;
     this._progressDiv.style.width = perc;
-    this._progressText.textContent =
-      `${perc} ${aptSize(this._done)} of ${aptSize(this._total)}`;
+    this._progressText.textContent = `${perc} ${aptSize(
+      this._done
+    )} of ${aptSize(this._total)}`;
   }
   setValues(done, total) {
     this._total = total;
@@ -39,6 +40,7 @@ export class FileDownloadElement extends HTMLElement {
     this._header.textContent = "Download Ready";
     this._download.textContent = `Filename:${this._meta.name}`;
     this.__size.textContent = `Size:${aptSize(this._meta.size)}`;
+    this.cancelBTN.onclick = () => this.remove();
     this.dlButton.onclick = () => {
       const a = document.createElement("a");
       a.href = this._url;
@@ -49,7 +51,7 @@ export class FileDownloadElement extends HTMLElement {
   }
   constructor(url, metaData) {
     super();
-    const innerHTML = `${css}<div full><div area><div header></div><div download></div><div size></div><span>Download</span></div></div>`;
+    const innerHTML = `${css}<div full><div area><div header></div><div download></div><div size></div><span cancel>Cancel</span><span download>Download</span></div></div>`;
     this._url = url;
     const template = document.createElement("template");
     template.innerHTML = innerHTML;
@@ -58,7 +60,9 @@ export class FileDownloadElement extends HTMLElement {
     this._header = shadowRoot.querySelector("div[header]");
     this._download = shadowRoot.querySelector("div[download]");
     this.__size = shadowRoot.querySelector("div[size]");
-    this.dlButton = shadowRoot.querySelector("span");
+    this.dlButton = shadowRoot.querySelector("span[download]");
+    this.cancelBTN = shadowRoot.querySelector("span[cancel]");
+    shadowRoot.querySelector("div[area]").onclick = e => e.stopPropagation();
     this._meta = metaData || {};
   }
 }
