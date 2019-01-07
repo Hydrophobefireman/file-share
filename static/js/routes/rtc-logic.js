@@ -244,10 +244,12 @@ export default class RTCConn {
         });
       }
     }
+    return true;
   }
   async _ChunkAndSendEachFile({ files }) {
     for (const file of files) {
       Chunker.chunk(file, this._sendPartialFile);
+      await nextEvent(window, "file-sent");
     }
   }
 
@@ -276,7 +278,7 @@ export default class RTCConn {
         e => this.__reportProgress(false, e, this._fileMeta.size),
         showDownloadDialog.bind(this)
       );
-      console.log("ready2");
+      console.log("received chunk");
       return this._sendJSON({ type: "chunk-ready" });
     }
     return;

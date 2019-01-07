@@ -1,5 +1,5 @@
 import webpackWorker from "worker-loader!./worker.js";
-import { _random, noop } from "./router/utils";
+import { _random, noop, Events } from "./router/utils";
 
 const worker = new webpackWorker();
 const Handler = (() => {
@@ -47,6 +47,7 @@ export class FileChunker {
     this._buffer.push(chunk.fileChunk);
     if (chunk.over) {
       this._fn({ bufferChunk: this._buffer, data: this._meta });
+      Events.emit("file-sent");
     }
   }
   /**
