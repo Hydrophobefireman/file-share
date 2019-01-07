@@ -273,7 +273,7 @@ export default class RTCConn {
         e => this.__reportProgress(false, e, this._fileMeta.size),
         showDownloadDialog.bind(this)
       );
-      return this._sendJSON({ type: "chunk-ready", data });
+      return this._sendJSON({ type: "chunk-ready" });
     }
     return;
   }
