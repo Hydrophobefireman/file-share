@@ -81,7 +81,9 @@ export class FileChunker {
 export class FileMerger {
   mergeBuffer(chunk) {
     console.log("final File:");
-    this._onFullFile(chunk);
+    Promise.resolve(this._onFullFile(chunk)).then(
+      () => ((this._buffer = []), (this._currentBufferByteSize = 0))
+    );
   }
   async merge({ file, data }, progressCallBack, onCompleteCallBack) {
     this._onFullFile = onCompleteCallBack;

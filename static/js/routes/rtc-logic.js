@@ -341,4 +341,5 @@ function showDownloadDialog(buffer) {
     this._fileMeta
   );
   document.body.append(filedl);
+  this._fileMeta = null;
 }

@@ -63,7 +63,8 @@ const fileChunker = ({ type, file, name, id }) => {
 const fileMerger = () => {
   console.log("mergin");
   const buffers = _appendBuffers(buffer);
-  return self.postMessage({ type: "merged-file", data: buffers }, [buffers]);
+  self.postMessage({ type: "merged-file", data: buffers }, [buffers]);
+  return (buffer.length = 0);
 };
 const fileMergeProgress = e => {
   buffer.push(e);
