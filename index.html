@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>File Share</title>
+    <meta
+      content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1"
+      name="viewport"
+    />
+  </head>
+  <body>
+    <noscript
+      >Please enable JavaScript to continue using this application.
+    </noscript>
+    <div
+      id="app-banner"
+      _routerIf="this.currentRoute!=='/'"
+      _routerThen="$.style.display='block'"
+    >
+      <button
+        class="banner-button"
+        ripple
+        _routerEvt="onclick"
+        _routerAct="console.log(this);this.load('/')"
+      >
+        Home Page
+      </button>
+    </div>
+    <div id="app-root"></div>
+  </body>
+</html>

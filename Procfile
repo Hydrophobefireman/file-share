@@ -1,0 +1,1 @@
+web: bin/start-nginx exec hypercorn app:app --workers 1 --keep-alive 550 -b unix:/tmp/nginx.socket
