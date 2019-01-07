@@ -233,6 +233,8 @@ export default class RTCConn {
         sentAmount += buf.byteLength;
         this.__reportProgress(true, sentAmount, data.size);
         if (i === ln - 1) {
+          const el = document.querySelector("file-progress");
+          el ? el.remove() : void 0;
           return this._sendJSON({ type: "complete" });
         }
       }
