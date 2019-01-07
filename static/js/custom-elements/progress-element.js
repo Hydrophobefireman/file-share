@@ -14,9 +14,10 @@ class ProgressElement extends HTMLElement {
       this._done
     )} of ${aptSize(this._total)}`;
   }
-  setValues(done, total) {
+  setValues(done, total, str) {
     this._total = total;
     this._done = done;
+    this._str = str;
     this._render();
   }
   constructor(done, total, str) {

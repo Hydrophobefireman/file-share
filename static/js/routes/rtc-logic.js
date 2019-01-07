@@ -188,13 +188,14 @@ export default class RTCConn {
     if (!this._progressElement.isConnected) {
       this._content.$$element.appendChild(this._progressElement);
     }
-    this._progressElement.setValues(done, total);
+    this._progressElement.setValues(done, total, str);
   }
   _startMainSess() {
     this._reportHook.textContent = `Connected to ${this._peer}`;
     this._dc.onmessage = this._dcOnMessage;
     this._messageHooks["file-chunk"] = data => {
       this._fileMeta = data;
+      console.log("ready for next chunk")
       this._sendJSON({ type: "chunk-ready", data });
     };
     this._messageHooks["complete"] = Merger.complete.bind(Merger);
