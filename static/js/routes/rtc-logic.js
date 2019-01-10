@@ -211,7 +211,7 @@ export default class RTCConn {
           multiple: "true",
           type: "file"
         });
-        $$Files.oninput = () =>
+        $$Files.onchange = () =>
           new Promise(resolve => resolve(this._ChunkAndSendEachFile($$Files)));
         return $$Files.click();
       };
