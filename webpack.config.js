@@ -92,9 +92,9 @@ module.exports = {
       ],
       inject: !0,
       lang: "en",
-      name: "WebMsg",
+      name: "File Share",
       start_url: "/",
-      short_name: "WebMsg",
+      short_name: "File Share",
       "theme-color": "#1976d2"
     }),
     new MiniCssExtractPlugin({

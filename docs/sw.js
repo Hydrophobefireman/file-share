@@ -5,7 +5,7 @@ var serviceWorkerOption = {
     "/vendors~main-e05474b7d4a8f4fc27fa.js",
     "/favicon.ico",
     "/index.html",
-    "/manifest.66f1889662ac3d13b287b2272d3d3834.json",
+    "/manifest.0150ea00e4fa90e2ddaa6c01e651f985.json",
     "/icon_512x512.371df40dd073f36cc0bfe43c035e0ce1.png",
     "/icon_384x384.cf311a8208dacce449d42dc30c991c20.png",
     "/icon_256x256.633fd7e946b26f506aca9cdcd700c0bd.png",
