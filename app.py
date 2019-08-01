@@ -14,7 +14,7 @@ DEFAULT_CONTENT_TYPE: str = "application/json"
 @app.route("/")
 async def redir_to_static_site():
     if "localhost" not in request.url:
-        return redirect("https://files.pycode.tk/", status_code=301)
+        return redirect("https://files.pycode.cf/", status_code=301)
     return "test"
 
 
@@ -213,7 +213,7 @@ async def resp_headers(resp):
     if "localhost" in request.headers.get("origin", ""):
         resp.headers["access-control-allow-origin"] = request.headers["origin"]
     else:
-        resp.headers["access-control-allow-origin"] = "https://files.pycode.tk"
+        resp.headers["access-control-allow-origin"] = "https://files.pycode.cf"
     resp.headers["Access-Control-Allow-Headers"] = request.headers.get(
         "Access-Control-Request-Headers", "*"
     )
