@@ -28,17 +28,17 @@ export const Events = new class Events {
     this.EventCache = {};
   }
 }();
-export const parseHash = (a = window.location) => {
-  let b, c;
-  if ("#" === a[0]) b = a.substr(1);
+export const parseHash = (route = window.location) => {
+  let url, url2;
+  if ("#" === route[0]) url = route.substr(1);
   else
     try {
-      (c = new URL(a)), (b = c.hash.substr(1));
+      (url2 = new URL(route)), (url = url2.hash.substr(1));
     } catch (n) {
-      (b = "/"), console.log(n);
+      (url = "/"), console.log(n);
     }
-  const d = b.split("?"),
-    [l, m] = [0 === b.length ? "/" : d[0], d[1]];
+  const d = url.split("?"),
+    [l, m] = [0 === url.length ? "/" : d[0], d[1]];
   return { path: l, qs: m };
 };
 export const noop = () => {};
