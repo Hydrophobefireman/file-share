@@ -1,66 +1,44 @@
-import { $, safeDefine } from "../router/utils.js";
+import { safeDefine } from "../router/utils.js";
+const SIZE = "size";
+const template = document.createElement("template");
+template.innerHTML = `<style>.spinner{margin:auto;height: 50px; width: 50px; animation: rotate 0.8s infinite linear; border: 6px solid #e3e3e3; border-right-color: var(--primary-color); border-radius: 50%;}@keyframes rotate{from{transform: rotate(0deg);}to{transform: rotate(360deg);}}</style><div class="spinner"></div>`;
+const installStringReflection = (obj, attrName, propName = attrName) => {
+  Object.defineProperty(obj, propName, {
+    enumerable: true,
+    get() {
+      const value = this.getAttribute(attrName);
+      return value === null ? "" : value;
+    },
+    set(v) {
+      this.setAttribute(attrName, v);
+    }
+  });
+};
+
 export default class MatSpinner extends HTMLElement {
-  set size(val) {
-    const spinner = this.svg();
-    spinner.style.height = spinner.style.width = val;
-  }
-  get size() {
-    return this.svg().style.height;
-  }
-  set color(val) {
-    this.circle().style.stroke = val;
-  }
-  get color() {
-    return this.circle().style.stroke;
-  }
-  set svgstyle(v) {
-    return (this.svg().style = v);
-  }
-  set circlestyle(v) {
-    return (this.circle().style = v);
+  constructor() {
+    super();
+    const src = template.content.cloneNode(true);
+    const shadow = this.attachShadow({ mode: "open" });
+    shadow.appendChild(src);
+    installStringReflection(this, SIZE);
+    /**
+     * @type {HTMLDivElement}
+     */
+    this.div = shadow.querySelector(".spinner");
   }
   static get observedAttributes() {
-    return ["size", "color", "svgstyle", "circlestyle"];
+    return [SIZE];
   }
-  attributeChangedCallback(a, _, c) {
-    "size" === a
-      ? (this.size = c)
-      : "color" === a
-      ? (this.color = c)
-      : "svgstyle" === a
-      ? (this.svgstyle = c)
-      : "circlestyle" === a && (this.circlestyle = c);
-  }
-  createTemplate() {
-    const a = `svg{display:inline-block;width: 65px;height: 65px;animation:rotator 1.4s linear infinite}@keyframes rotator{0%{transform:rotate(0)}100%{transform:rotate(270deg)}}circle{stroke:#6f70ee;stroke-dasharray:120;stroke-dashoffset:0;transform-origin:center;animation:dash 1.4s ease-in-out infinite}@keyframes dash{0%{stroke-dashoffset:120}50%{stroke-dasharray:200;stroke-dashoffset:190;transform:rotate(135deg)}100%{stroke-dashoffset:120;transform:rotate(450deg)}}`,
-      b = $.create("svg", {
-        viewbox: "0 0 66 66",
-        xmlns: "http://www.w3.org/2000/svg"
-      }),
-      c = $.create("circle", {
-        fill: "none",
-        "stroke-width": 6,
-        "stroke-linecap": "round",
-        cx: 33,
-        cy: 33,
-        r: 30
-      }),
-      d = document.createElement("template");
-    b.appendChild(c);
-    const e = document.createElement("style");
-    return (e.innerHTML = a), (d.innerHTML = e.outerHTML + b.outerHTML), d;
-  }
-  constructor(size, color, svgstyle, circlestyle) {
-    super();
-    const e = this.createTemplate(),
-      f = this.attachShadow({ mode: "open" });
-    f.appendChild(e.content.cloneNode(!0)),
-      (this.svg = () => this.shadowRoot.querySelector("svg")),
-      (this.circle = () => this.shadowRoot.querySelector("circle")),
-      size && (this.size = size),
-      color && (this.color = color),
-      svgstyle && (this.svg().style = svgstyle),
-      circlestyle && (this.circle().style = circlestyle);
+  attributeChangedCallback(name, oldVal, newVal) {
+    if (name === SIZE && newVal !== oldVal) {
+      const css = this.div.style;
+      css.height = css.width =
+        typeof newVal === "string" && newVal.includes("px")
+          ? newVal
+          : `${newVal}px`;
+    }
   }
 }
+
 safeDefine("mat-spinner", MatSpinner);

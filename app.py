@@ -4,7 +4,6 @@ from secrets import token_hex
 
 from quart import Quart, Response, redirect, request, session, websocket
 from quart.sessions import SecureCookieSessionInterface
-from util import create_cookie
 from secure import SecureCookie
 from enum import Enum
 
@@ -12,9 +11,10 @@ from enum import Enum
 class SameSite(Enum):
     none = "None"
 
-
 sec = SecureCookie(samesite=SameSite.none)
+
 cookie_sess = SecureCookieSessionInterface()
+
 app = Quart(__name__)
 app.secret_key = "08d24852be504fb7d0446a171ddba4228e08dd6efaa894"
 app.__sockets__ = set()
