@@ -5,7 +5,15 @@ from secrets import token_hex
 from quart import Quart, Response, redirect, request, session, websocket
 from quart.sessions import SecureCookieSessionInterface
 from util import create_cookie
+from secure import SecureCookie
+from enum import Enum
 
+
+class SameSite(Enum):
+    none = "None"
+
+
+sec = SecureCookie(samesite=SameSite.none)
 cookie_sess = SecureCookieSessionInterface()
 app = Quart(__name__)
 app.secret_key = "08d24852be504fb7d0446a171ddba4228e08dd6efaa894"
@@ -143,8 +151,7 @@ async def main_socket():
 
 @app.route("/api/set-id/", methods=["POST"])
 async def set_socket_id():
-    _session = dict(session)
-    print(_session)
+    _session = get_session(request)
     data: dict = await request.get_json()
     sess_id: str = data.get("sess_id")
     device_id: str = data.get(
@@ -157,30 +164,31 @@ async def set_socket_id():
 
 @app.route("/api/validate-id/", methods=["POST"])
 async def validate_socket_id():
-    _session = dict(session)
+    _session = get_session(request)
     data: dict = await request.get_json()
     sess_id: str = data.get("sess_id")
     _session["u_id"] = token_hex(15)
     peer = get_peer_socket(sess_id, _session["u_id"])
     if peer:
-        return _response({"type": "existing_connection"})
+        return _response({"type": "existing_connection"}, cookies=_session)
     return _response({"type": "unique"}, cookies=_session)
 
 
 @app.route("/api/verify/", methods=["POST"])
 async def verify_session():
-    if not session.get("device_id") or not session.get("sess_id"):
+    _session = get_session(request)
+    if not _session.get("device_id") or not _session.get("sess_id"):
         return _response(({"error": True}))
     data = await request.get_json()
-    if session["sess_id"] != data.get("sess_id"):
+    if _session["sess_id"] != data.get("sess_id"):
         return _response(({"error": True}))
     return _response({"success": True})
 
 
 @app.route("/api/get-id/", methods=["POST"])
 async def get_socket_id():
-    _session = dict(session)
     data: dict = await request.get_json()
+    _session = get_session(request)
     device_id: str = data.get(
         "device_id", f"device-id-{data.get('default_token')}-{token_hex(5)}"
     )
@@ -189,7 +197,7 @@ async def get_socket_id():
     _session["sess_id"] = sess_id
     peer = get_peer_socket(sess_id, _session["u_id"], True)
     if not peer:
-        return _response({"type": "no_id"})
+        return _response({"type": "no_id"}, cookies=_session)
     init_conn: list = []
     init_conn.extend(i.device_id for i in peer)
     return _response({"init_conn": init_conn}, cookies=_session)
@@ -203,15 +211,15 @@ def _response(
 ) -> Response:
     resp = Response(json.dumps(jsobj), headers=headers, status=code)
     if cookies:
-        data = create_cookie(
-            "session",
-            cookie_sess.get_signing_serializer(app).dumps(dict(cookies)),
-            httponly=True,
-            path="/",
-            secure=True,
-            SameSite="None",
-        )
-        resp.headers.add("Set-Cookie", data)
+        if "localhost" not in request.headers.get("Origin"):
+            sec.quart(
+                resp,
+                app.session_cookie_name,
+                cookie_sess.get_signing_serializer(app).dumps(dict(cookies)),
+            )
+        else:
+            for k, v in cookies.items():
+                session[k] = v
     return resp
 
 
@@ -251,5 +259,14 @@ def open_to_nginx():
         pass
 
 
+def get_session(r):
+    cookies = r.cookies.get(app.session_cookie_name)
+    if cookies:
+        c = cookie_sess.get_signing_serializer(app).loads(cookies)
+        return c
+    return {}
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", use_reloader=True)
+
