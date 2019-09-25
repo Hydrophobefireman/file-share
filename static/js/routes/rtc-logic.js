@@ -195,7 +195,7 @@ export default class RTCConn {
     this._dc.onmessage = this._dcOnMessage;
     this._messageHooks["file-chunk"] = data => {
       this._fileMeta = data;
-      console.log("ready for next chunk");
+
       this._sendJSON({ type: "chunk-ready", data });
     };
     this._messageHooks["complete"] = Merger.complete.bind(Merger);
@@ -278,7 +278,6 @@ export default class RTCConn {
         e => this.__reportProgress(false, e, this._fileMeta.size),
         showDownloadDialog.bind(this)
       );
-      console.log("received chunk");
       return this._sendJSON({ type: "chunk-ready" });
     }
     return;

@@ -1,3 +1,5 @@
+import makeDraggable from "./swipeableCard";
+
 const commonCss =
   "div[full]{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;position:absolute;top:0;bottom:0;left:0;right:0;background:rgba(0,0,0,.61);z-index:10;padding:16px}div[header],input{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none}div[header]{font-weight:700;user-select:none}div[message],div[area]{-webkit-box-shadow:0 4px 5px 0 rgba(0,0,0,.14),0 1px 10px 0 rgba(0,0,0,.12),0 2px 4px -1px rgba(0,0,0,.4);box-shadow:0 4px 5px 0 rgba(0,0,0,.14),0 1px 10px 0 rgba(0,0,0,.12),0 2px 4px -1px rgba(0,0,0,.4);z-index:3;background:#fff;border-radius:8px;width:100%;padding:16px;max-width:500px}input,span{display:inline-block}input{user-select:none;background-color:#f5f5f5;padding:12px;margin-top:20px;margin-bottom:20px;width:95%;border:none;outline:0;border-radius:50px}span:hover{background-color:#d2d2d2}span{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;min-width:60px;text-align:center;padding:6px;cursor:pointer;border-radius:8px;color:var(--primary-color)}";
 export function textInputFactory() {
@@ -27,7 +29,9 @@ export function textInputFactory() {
       template.innerHTML = $this.innerHTML;
       const shadowRoot = this.attachShadow({ mode: "open" });
       shadowRoot.appendChild(template.content.cloneNode(!0));
-      shadowRoot.querySelector("div[area]").onclick = e => e.stopPropagation();
+      const area = shadowRoot.querySelector("div[area]");
+      makeDraggable(area, null, true, { remove: this });
+      area.onclick = e => e.stopPropagation();
       shadowRoot.querySelector("div[full]").onclick = () => this.remove();
       $this.input = shadowRoot.querySelector("input");
       this.focus = () => $this.input.focus();
@@ -63,8 +67,9 @@ export function textReceivedFactory() {
       shadowRoot.appendChild(template.content.cloneNode(!0));
       $this.message = shadowRoot.querySelector("input[message-content]");
       $this.message.value = data || "";
-      shadowRoot.querySelector("div[message]").onclick = e =>
-        e.stopPropagation();
+      const msg = shadowRoot.querySelector("div[message]");
+      makeDraggable(msg, null, true, { remove: this });
+      msg.onclick = e => e.stopPropagation();
       shadowRoot.querySelector("span").onclick = shadowRoot.querySelector(
         "div[full]"
       ).onclick = () => this.remove();
