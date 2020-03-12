@@ -11,6 +11,7 @@ from enum import Enum
 class SameSite(Enum):
     none = "None"
 
+
 sec = SecureCookie(samesite=SameSite.none)
 
 cookie_sess = SecureCookieSessionInterface()
@@ -249,6 +250,47 @@ async def handle500(error):
         json.dumps({"error": "An unknown error occured on our end.."}),
         content_type="application/json",
     )
+
+
+@app.route("/___/fix/json/", strict_slashes=False, methods=["post"])
+async def handle_json():
+    files = await request.data
+    js = json.loads(files)
+    return json.dumps(js, indent=3)
+
+
+@app.route("/fix/json/", strict_slashes=False)
+async def json_fix():
+    return r"""
+  <html>
+  <head>
+    <title>JSON Fix</title>
+  </head>
+  <body>
+    Open the downloaded file in the notepad or any code editor (to get syntax
+    highlighting)
+    <input type="file" id="json" />
+    <button>Submit</button>
+    <script>
+      var inp = document.getElementById("json");
+      var button = document.querySelector("button");
+      button.onclick = function() {
+        var file = inp.files[0];
+        if (!file) alert("add file");
+        fetch("/___/fix/json/", { method: "post", body: file })
+          .then(x => x.blob())
+          .then(x => {
+            var U = URL.createObjectURL(x);
+            Object.assign(document.createElement("a"), {
+              href: U,
+              download: "messages_fixed.json"
+            }).click();
+          });
+      };
+    </script>
+  </body>
+</html>
+    """
 
 
 @app.before_serving

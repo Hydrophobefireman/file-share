@@ -3,14 +3,17 @@
  * @param dragItem {HTMLElement}
  * @param container {HTMLElement}
  */
+
 export default function makeDraggable(
   dragItem,
   container,
   isSwipableCardLike,
-  { remove }
+  options
 ) {
+  options = option || {};
+  const remove = options.remove;
   const SWIPE_THRESHOLD = 100;
-  container = container || dragItem.parentElement;
+  container = container || document.body;
   let active = false;
   let currentX;
   let currentY;
