@@ -15,8 +15,8 @@
     "url-loader": "^2.1.0",
     "webpack": "^4.40.2",
     "webpack-cli": "^3.3.9",
-    "webpack-dev-server": "^3.8.1",
-    "webpack-pwa-manifest": "^4.0.0",
+    "webpack-dev-server": "^3.11.0",
+    "webpack-pwa-manifest": "^4.2.0",
     "worker-loader": "^2.0.0"
   },
   "dependencies": {
@@ -25,6 +25,7 @@
   },
   "scripts": {
     "start": "webpack-dev-server",
-    "build": "webpack --config webpack.config.prod.js"
+    "build": "rm -rf ./docs;webpack --config webpack.config.prod.js",
+    "postbuild": "for i in ./build_static/*;do echo \"$i\" && cp -r \"$i\" ./docs/; done"
   }
 }
