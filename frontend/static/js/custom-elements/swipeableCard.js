@@ -10,7 +10,7 @@ export default function makeDraggable(
   isSwipableCardLike,
   options
 ) {
-  options = option || {};
+  options = options || {};
   const remove = options.remove;
   const SWIPE_THRESHOLD = 100;
   container = container || document.body;
