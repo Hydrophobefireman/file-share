@@ -232,7 +232,8 @@ async def api_app_wake_up():
 
 @app.after_request
 async def resp_headers(resp: Response):
-    if "localhost" in request.headers.get("origin", ""):
+    origin = request.headers.get("origin", "")
+    if "localhost" in origin or "files-rtc.netlify.app":
         resp.headers["access-control-allow-origin"] = request.headers["origin"]
     else:
         resp.headers["access-control-allow-origin"] = "https://files.pycode.tk"
