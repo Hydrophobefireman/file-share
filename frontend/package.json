@@ -27,6 +27,6 @@
   "scripts": {
     "start": "cross-env NODE_ENV=development webpack-cli serve",
     "build": "rm -rf ./docs && cross-env NODE_ENV=production webpack --config webpack.config.js",
-    "postbuild": "for i in ./build_static/*;do echo \"$i\" && cp -r \"$i\" ./docs/; done"
+    "postbuild": "node scripts/postbuild.js"
   }
 }
