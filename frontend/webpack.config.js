@@ -101,7 +101,7 @@ module.exports = {
       filename: "[name]-[hash].css",
       chunkFilename: "[id]-[hash].css"
     }),
-    new StyleExtHtmlWebpackPlugin({ minify: devOrProd(!0, !1) }),
-    new serviceWorkerPlugin({ entry: `${__dirname}/static/js/sw.js` })
+    // new StyleExtHtmlWebpackPlugin({ minify: devOrProd(!0, !1) }),
+    
   ]
 };

@@ -20,22 +20,22 @@ module.exports = {
                 "@babel/preset-env",
                 {
                   // targets: ">0.5%,not ie 11,not op_mini all"
-                }
-              ]
+                },
+              ],
             ],
-            plugins: ["@babel/plugin-transform-runtime"]
-          }
-        }
+            plugins: ["@babel/plugin-transform-runtime"],
+          },
+        },
       },
       {
         test: /\.css$/,
-        use: [{ loader: MiniCssExtractPlugin.loader }, "css-loader"]
+        use: [{ loader: MiniCssExtractPlugin.loader }, "css-loader"],
       },
       {
         test: /\.(png|jpg|gif|ico|svg)$/,
-        use: [{ loader: "url-loader", options: { fallback: "file-loader" } }]
-      }
-    ]
+        use: [{ loader: "url-loader", options: { fallback: "file-loader" } }],
+      },
+    ],
   },
   entry: `${__dirname}/static/js/app.js`,
   output: { path: `${__dirname}/docs`, filename: "[name]-[hash].js" },
@@ -43,8 +43,8 @@ module.exports = {
   optimization: {
     minimizer: [new minifier({ parallel: !0 })],
     splitChunks: {
-      chunks: "all"
-    }
+      chunks: "all",
+    },
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -57,8 +57,8 @@ module.exports = {
         html5: !0,
         minifyCSS: !0,
         removeEmptyAttributes: !0,
-        removeRedundantAttributes: !0
-      }
+        removeRedundantAttributes: !0,
+      },
     }),
     new webpackPwaManifest({
       background_color: "#e3e3e3",
@@ -68,8 +68,8 @@ module.exports = {
       icons: [
         {
           src: `${__dirname}/assets/icons/icon.png`,
-          sizes: [72, 96, 128, 144, 152, 192, 256, 384, 512]
-        }
+          sizes: [72, 96, 128, 144, 152, 192, 256, 384, 512],
+        },
       ],
       inject: !0,
       lang: "en",
@@ -77,13 +77,12 @@ module.exports = {
       start_url: "/",
       short_name: "File Share",
       "theme-color": "#1976d2",
-      theme_color: "#1976d2"
+      theme_color: "#1976d2",
     }),
     new MiniCssExtractPlugin({
       filename: "[name]-[hash].css",
-      chunkFilename: "[id]-[hash].css"
+      chunkFilename: "[id]-[hash].css",
     }),
-    new StyleExtHtmlWebpackPlugin({ minify: true }),
-    new serviceWorkerPlugin({ entry: `${__dirname}/static/js/sw.js` })
-  ]
+    // new StyleExtHtmlWebpackPlugin({ minify: true }),
+  ],
 };

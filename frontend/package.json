@@ -1,31 +1,32 @@
 {
   "devDependencies": {
-    "@babel/core": "^7.6.2",
-    "@babel/plugin-transform-runtime": "^7.6.2",
-    "@babel/preset-env": "^7.6.2",
-    "babel-loader": "^8.0.6",
-    "css-loader": "^3.2.0",
-    "cssnano": "^4.1.10",
-    "file-loader": "^4.2.0",
-    "html-webpack-plugin": "^3.2.0",
-    "mini-css-extract-plugin": "^0.8.0",
+    "@babel/core": "^7.14.3",
+    "@babel/plugin-transform-runtime": "^7.14.3",
+    "@babel/preset-env": "^7.14.4",
+    "babel-loader": "^8.2.2",
+    "cross-env": "^7.0.3",
+    "css-loader": "^5.2.6",
+    "cssnano": "^5.0.5",
+    "file-loader": "^6.2.0",
+    "html-webpack-plugin": "^5.3.1",
+    "mini-css-extract-plugin": "^1.6.0",
     "serviceworker-webpack-plugin": "^1.0.1",
-    "style-ext-html-webpack-plugin": "^4.1.2",
-    "terser-webpack-plugin": "^2.1.0",
-    "url-loader": "^2.1.0",
-    "webpack": "^4.40.2",
-    "webpack-cli": "^3.3.9",
-    "webpack-dev-server": "^3.11.0",
-    "webpack-pwa-manifest": "^4.2.0",
-    "worker-loader": "^2.0.0"
+    "style-ext-html-webpack-plugin": "^4.1.3",
+    "terser-webpack-plugin": "^5.1.3",
+    "url-loader": "^4.1.1",
+    "webpack": "^5.38.1",
+    "webpack-cli": "^4.7.0",
+    "webpack-dev-server": "^3.11.2",
+    "webpack-pwa-manifest": "^4.3.0",
+    "worker-loader": "^3.0.8"
   },
   "dependencies": {
-    "@babel/runtime": "^7.6.2",
+    "@babel/runtime": "^7.14.0",
     "upgrade": "^1.1.0"
   },
   "scripts": {
-    "start": "webpack-dev-server",
-    "build": "rm -rf ./docs;webpack --config webpack.config.prod.js",
+    "start": "cross-env NODE_ENV=development webpack-cli serve",
+    "build": "rm -rf ./docs && cross-env NODE_ENV=production webpack --config webpack.config.js",
     "postbuild": "for i in ./build_static/*;do echo \"$i\" && cp -r \"$i\" ./docs/; done"
   }
 }
