@@ -26,7 +26,6 @@
   },
   "scripts": {
     "start": "cross-env NODE_ENV=development webpack-cli serve",
-    "build": "rm -rf ./docs && cross-env NODE_ENV=production webpack --config webpack.config.js",
-    "postbuild": "node scripts/postbuild.js"
+    "build": "rm -rf ./docs && cross-env NODE_ENV=production webpack --config webpack.config.js"
   }
 }
